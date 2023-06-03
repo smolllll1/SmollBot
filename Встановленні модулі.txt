@@ -1,0 +1,6 @@
+
+pip3 install pyTelegramBotAPI # телебот
+pip3 install pyowm            # погода
+pip install beautifulsoup4    # для спайрінга html сторінок
+pip install requests          # разом з BS4
+pip install openai            # чат GPT
