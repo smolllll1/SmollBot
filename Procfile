@@ -1,1 +1,1 @@
-worker: python Bot.py
+release: python Bot.py
