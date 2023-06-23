@@ -6,7 +6,7 @@ import Pygoda
 import marshrytku
 import keybord
 #import porahyu
-from porahyu import plys, minus, multiplication, division
+#from porahyu import plys, minus, multiplication, division
 from telebot import types
 
 bot = telebot.TeleBot(Config.TOKEN)
@@ -52,7 +52,7 @@ def welcome(game):
 @bot.message_handler(commands=['porahyu'])
 def welcome(message):
     if message.text == '/porahyu':
-        bot.send_message(message.chat.id, "👇 Що робимо? 👇", reply_markup=keybord.markup_porahuy)
+        bot.send_message(message.chat.id, "   👇 Що робимо? 👇   ", reply_markup=keybord.markup_porahuy)
 
         '''PРозклад маршруток'''
 
@@ -80,48 +80,49 @@ def callback_inline(call):
             if call.data == 'arror3':
                 bot.send_message(chat_id=call.message.chat.id, text='Спробуй щераз!!!')
             if call.data == 'value':
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="👍", reply_markup=keybord.markup_porahuy)
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="👍", reply_markup=None)
+                bot.send_message(chat_id=call.message.chat.id, text="   👇 Що робимо? 👇   ", reply_markup=keybord.markup_porahuy)
 
             if call.data == 'Додавання':
                 random_x = random.randint(1, 10)
                 random_y = random.randint(1, 20)
-                valueText = str(f'{random_x} + {random_y} =')
+                valueText = str(f'👇     {random_x} + {random_y} = ❓    👇')
                 bot.edit_message_text(
                     chat_id=call.message.chat.id, 
                     message_id=call.message.message_id, 
                     text=valueText, 
-                    reply_markup=plys(random_x, random_y))
+                    reply_markup=keybord.plys(random_x, random_y))
             
             if call.data == 'Віднімання':
                 random_x = random.randint(1, 10)
                 random_y = random.randint(10, 20)
-                valueText = str(f'{random_y} - {random_x} =')
+                valueText = str(f'👇     {random_y} - {random_x} = ❓    👇')
                 bot.edit_message_text(
                     chat_id=call.message.chat.id, 
                     message_id=call.message.message_id, 
                     text=valueText, 
-                    reply_markup=minus(random_y, random_x))
+                    reply_markup=keybord.minus(random_y, random_x))
                 
             if call.data == 'Множення':
                 random_x = random.randint(1, 10)
                 random_y = random.randint(1, 11)
-                valueText = str(f'{random_x} x {random_y} =')
+                valueText = str(f'👇     {random_x} x {random_y} = ❓    👇')
                 bot.edit_message_text(
                     chat_id=call.message.chat.id, 
                     message_id=call.message.message_id, 
                     text=valueText, 
-                    reply_markup=multiplication(random_x, random_y))
+                    reply_markup=keybord.multiplication(random_x, random_y))
                 
             if call.data == 'Ділення':
                 random_x = random.randint(1, 10)
                 random_y = random.randint(1, 11)
                 divisionValue = random_x * random_y
-                valueText = str(f'{divisionValue} / {random_x} =')
+                valueText = str(f'👇     {divisionValue} / {random_x} = ❓    👇')
                 bot.edit_message_text(
                     chat_id=call.message.chat.id, 
                     message_id=call.message.message_id,
                     text=valueText, 
-                    reply_markup=division(divisionValue, random_x))
+                    reply_markup=keybord.division(divisionValue, random_x))
 
             # Для Кнопок гри В ЧУВУЧІ
 
