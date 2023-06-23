@@ -12,6 +12,13 @@ markup_KNB__close = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_key
 item1 = types.KeyboardButton('Зіграймо ще раз!')
 markup_KNB__close.add(item1)
 
+markup_porahuy = types.InlineKeyboardMarkup(row_width=2) # test
+item1 = types.InlineKeyboardButton('Додавання', callback_data='Додавання')
+item2 = types.InlineKeyboardButton('Віднімання', callback_data='Віднімання')
+item3 = types.InlineKeyboardButton('Множення', callback_data='Множення')
+item4 = types.InlineKeyboardButton('Ділення', callback_data='Ділення')
+markup_porahuy.add(item1, item2, item3, item4)
+
 markup_zypunka = types.InlineKeyboardMarkup(row_width=1) # клавіатура зупинок
 item1 = types.InlineKeyboardButton('Скотофуражний ринок', callback_data='Скотофуражний ринок')
 item2 = types.InlineKeyboardButton('Центр-->Цукровий завод', callback_data='Центр-->Цукровий завод')
@@ -25,7 +32,7 @@ markup_zypunka.add(item1, item2, item3, item4, item5, item6, item7, item8)
 
 # markup_close = types.ReplyKeyboardRemove(selective=False) # закриває клавіатуру
 
-markup_time = types.InlineKeyboardMarkup(row_width=1) # вибір часу зупинки
+markup_time = types.InlineKeyboardMarkup(row_width=2) # вибір часу зупинки
 item1 = types.InlineKeyboardButton('07:00-08:00', callback_data='07:00-08:00')
 item2 = types.InlineKeyboardButton('08:00-09:00', callback_data='08:00-09:00')
 item3 = types.InlineKeyboardButton('09:00-10:00', callback_data='09:00-10:00')

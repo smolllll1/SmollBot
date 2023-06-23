@@ -1,178 +1,67 @@
-import openai
 import telebot
 import Config
 import random
 import Pygoda
-import kyrs_valut
+#import kyrs_valut
 import marshrytku
 import keybord
+#import porahyu
+from porahyu import plys, minus, multiplication, division
 from telebot import types
 
 bot = telebot.TeleBot(Config.TOKEN)
-openai.api_key = Config.key_openai
-ad = 7
-model_engine = 'text-davinci-003'
-
-def generate_response(prompt):
-    response = openai.Completion.create(engine=model_engine, prompt=prompt, presence_penalty=0, frequency_penalty=0, max_tokens=128, top_p=0.8, stop=[" Human:", " AI:"], temperature=0.8)
-    message = response.choices[0].text
-    return message
-
-@bot.message_handler(func=lambda message: True)
-def handle_all_message(message):
-    if message.text.startswith('/start'):
+ad = 7 
+@bot.message_handler(commands=['start'])
+def welcome(message):
+    if message.text == '/start':
         sti = open('1.png', 'rb')
         bot.send_sticker(message.chat.id, sti)
-        bot.send_message(message.chat.id, "Привіт, {0.first_name}!\nЯ - <b>{1.first_name}</b>, бот створений тебе розважити!).".format(message.from_user, bot.get_me()), parse_mode='html')
-        return
-    if message.text.startswith('/kyrs'):
-        bot.send_message(message.chat.id, f'Курс на сьогодні:\n\n{kyrs_valut.usd()}\n{kyrs_valut.euro()}\n{kyrs_valut.pln()}\n\n{kyrs_valut.bitcoin()}\n{kyrs_valut.ethereum()}')
-        return
-    if message.text.startswith('/pogoda'):
-        bot.send_message(message.chat.id, Pygoda.pogod)
+        bot.send_message(message.chat.id, "Привіт, {0.first_name}!\nЯ - <b>{1.first_name}</b>, бот створений тебе розважити!).".format(message.from_user, bot.get_me()), parse_mode='html') #, reply_markup=markup)
 
-        if Pygoda.temp <= 3:
-            bot.send_message(message.chat.id, "🥶")
-        if Pygoda.temp > 3 and Pygoda.temp <= 7:
-            bot.send_message(message.chat.id, "🤧")
-        if Pygoda.temp > 7 and Pygoda.temp <= 10:
-            bot.send_message(message.chat.id, "😶‍🌫️")
-        if Pygoda.temp > 10 and Pygoda.temp <= 14:
-            bot.send_message(message.chat.id, "😄")
-        if Pygoda.temp > 14 and Pygoda.temp <= 20:
-            bot.send_message(message.chat.id, "😎")
-        if Pygoda.temp > 20:
-            bot.send_message(message.chat.id, "🥵")
-        return
-    if message.text.startswith('/game'):
-        bot.send_message(message.chat.id, "_______________ВИБИРАЙ_______________", reply_markup=keybord.markup_KNB)
-        return
-    if message.text.startswith('/marshrytki'):
-        bot.send_message(message.chat.id, "⏱ Вибери години ⏱", parse_mode='html', reply_markup=keybord.markup_time)
-        return
-    if message.text.startswith('/porahyu'):
-        t = random.randint(0, 20)  # співвідношення +(10%) -(10%) *(30%) /(50%)
-        r = random.randint(2, 3)  # множення, ділення на 2 і 3
-        a = random.randint(0, 20)
-        b = random.randint(2, 10)
-        c = random.randint(10, 20)
-        c1 = random.randint(0, 50)  # цифри на кнопках підсказках
-        a1 = random.randint(0, 20)  # цифри на кнопках підсказках
-        b1 = random.randint(0, 10)  # цифри на кнопках підсказках
-        if t == 0:
-            w = a + b
-            bot.send_message(message.chat.id, str(a) + '+' + str(b) + "=")
+@bot.message_handler(commands=['kyrs'])
+def kyrs(message):
+    # bot.send_message(message.chat.id, f'Курс на сьогодні:\n {kyrs_valut.usd()}\n{kyrs_valut.euro()}\n  {kyrs_valut.pln()}\n\n{kyrs_valut.bitcoin()}\n{kyrs_valut.ethereum()}')
+    bot.send_message(message.chat.id,'Сервіс тимчасово не працює!')
 
-            markup = types.InlineKeyboardMarkup(row_width=2, )
-            item1 = types.InlineKeyboardButton(w, callback_data='w')
-            if a1 != w:
-                item2 = types.InlineKeyboardButton(a1, callback_data='a')
-            else:
-                a1 = + 1
-                item2 = types.InlineKeyboardButton(a1, callback_data='a')
-            if b1 != w:
-                item3 = types.InlineKeyboardButton(b1, callback_data='b')
-            else:
-                b1 = + 1
-                item3 = types.InlineKeyboardButton(b1, callback_data='b')
-            if c1 != w:
-                item4 = types.InlineKeyboardButton(c1, callback_data='q')
-            else:
-                c1 = + 1
-                item4 = types.InlineKeyboardButton(c1, callback_data='q')
+@bot.message_handler(commands=['pogoda'])
+def pogoda(message):
+    bot.send_message(message.chat.id, Pygoda.pogod)
 
-            x = [item1, item2, item3, item4]  # рамдомно перемішує кнопки під повідомленням
-            random.shuffle(x)
+    if Pygoda.temp <= 3:
+        bot.send_message(message.chat.id, "🥶")
+    if Pygoda.temp > 3 and Pygoda.temp <= 7:
+        bot.send_message(message.chat.id, "🤧")
+    if Pygoda.temp > 7 and Pygoda.temp <= 10:
+        bot.send_message(message.chat.id, "😶‍🌫️")
+    if Pygoda.temp > 10 and Pygoda.temp <= 14:
+        bot.send_message(message.chat.id, "😄")
+    if Pygoda.temp > 14 and Pygoda.temp <= 20:
+        bot.send_message(message.chat.id, "😎")
+    if Pygoda.temp > 20:
+        bot.send_message(message.chat.id, "🥵")
 
-            markup.add(x[0], x[1], x[2], x[3])
-            bot.send_message(message.chat.id, "👇 Вибери правильну відповідь 👇", reply_markup=markup)
-        if t == 1:
-            w = c - b
-            bot.send_message(message.chat.id, str(c) + '-' + str(b) + "=")
+        '''Гра Камінь, Ножиці, Бумага'''
 
-            markup = types.InlineKeyboardMarkup(row_width=2)
-            item1 = types.InlineKeyboardButton(w, callback_data='w')
-            if a1 != w:
-                item2 = types.InlineKeyboardButton(a1, callback_data='a')
-            else:
-                a1 = + 1
-                item2 = types.InlineKeyboardButton(a1, callback_data='a')
-            if b1 != w:
-                item3 = types.InlineKeyboardButton(b1, callback_data='b')
-            else:
-                b1 = + 1
-                item3 = types.InlineKeyboardButton(b1, callback_data='b')
-            if c1 != w:
-                item4 = types.InlineKeyboardButton(c1, callback_data='q')
-            else:
-                c1 = + 1
-                item4 = types.InlineKeyboardButton(c1, callback_data='q')
+@bot.message_handler(commands=['game'])
+def welcome(game):
 
-            x = [item1, item2, item3, item4]
-            random.shuffle(x)
+    bot.send_message(game.chat.id, "_______________ВИБИРАЙ_______________", reply_markup=keybord.markup_KNB)
 
-            markup.add(x[0], x[1], x[2], x[3])
-            bot.send_message(message.chat.id, "👇 Вибери правильну відповідь 👇", reply_markup=markup)
+    '''Порахуй'''
 
-        if t >= 2 and t <= 10:
-            w = r * b
-            bot.send_message(message.chat.id, str(r) + '*' + str(b) + "=")
+@bot.message_handler(commands=['porahyu'])
+def welcome(message):
+    if message.text == '/porahyu':
+        bot.send_message(message.chat.id, "👇 Що робимо? 👇", reply_markup=keybord.markup_porahuy)
 
-            markup = types.InlineKeyboardMarkup(row_width=2)
-            item1 = types.InlineKeyboardButton(w, callback_data='w')
-            if a1 != w:
-                item2 = types.InlineKeyboardButton(a1, callback_data='a')
-            else:
-                a1 = + 1
-                item2 = types.InlineKeyboardButton(a1, callback_data='a')
-            if b1 != w:
-                item3 = types.InlineKeyboardButton(b1, callback_data='b')
-            else:
-                b1 = + 1
-                item3 = types.InlineKeyboardButton(b1, callback_data='b')
-            if c1 != w:
-                item4 = types.InlineKeyboardButton(c1, callback_data='q')
-            else:
-                c1 = + 1
-                item4 = types.InlineKeyboardButton(c1, callback_data='q')
+        '''PРозклад маршруток'''
 
-            x = [item1, item2, item3, item4]
-            random.shuffle(x)
+@bot.message_handler(content_types =['text'])
+def marshrytki(game):
+    global ad
 
-            markup.add(x[0], x[1], x[2], x[3])
-            bot.send_message(message.chat.id, "👇 Вибери правильну відповідь 👇", reply_markup=markup)
-
-        if t > 10 and t <= 20:
-            d = r * b
-            w = d / r
-            bot.send_message(message.chat.id, str(d) + '/' + str(r) + "=")
-
-            markup = types.InlineKeyboardMarkup(row_width=2)
-            item1 = types.InlineKeyboardButton(int(w), callback_data='w')
-            if a1 != w:
-                item2 = types.InlineKeyboardButton(a1, callback_data='a')
-            else:
-                a1 = + 1
-                item2 = types.InlineKeyboardButton(a1, callback_data='a')
-            if b1 != w:
-                item3 = types.InlineKeyboardButton(b1, callback_data='b')
-            else:
-                b1 = + 1
-                item3 = types.InlineKeyboardButton(b1, callback_data='b')
-            if c1 != w:
-                item4 = types.InlineKeyboardButton(c1, callback_data='q')
-            else:
-                c1 = + 1
-                item4 = types.InlineKeyboardButton(c1, callback_data='q')
-
-            x = [item1, item2, item3, item4]
-            random.shuffle(x)
-
-            markup.add(x[0], x[1], x[2], x[3])
-            bot.send_message(message.chat.id, "👇 Вибери правильну відповідь 👇", reply_markup=markup)
-        return
-    response = generate_response(message.text)
-    bot.send_message(message.chat.id, response)
+    if game.text == '/marshrytki':
+        bot.send_message(game.chat.id, "⏱ Вибери години ⏱", parse_mode='html', reply_markup=keybord.markup_time)
 
 #    if game.text == "Вимкнути клавіатуру":
  #       markup = types.ReplyKeyboardRemove(selective=True)
@@ -184,14 +73,55 @@ def callback_inline(call):
     try:
         if call.message:
             # Для Кнопки матиматики
-            if call.data == 'a':
+            if call.data == 'arror1':
                 bot.send_message(chat_id=call.message.chat.id, text='Спробуй щераз!!!')
-            if call.data == 'b':
+            if call.data == 'arror2':
                 bot.send_message(chat_id=call.message.chat.id, text='Спробуй щераз!!!')
-            if call.data == 'q':
+            if call.data == 'arror3':
                 bot.send_message(chat_id=call.message.chat.id, text='Спробуй щераз!!!')
-            if call.data == 'w':
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="👍")
+            if call.data == 'value':
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="👍", reply_markup=keybord.markup_porahuy)
+
+            if call.data == 'Додавання':
+                random_x = random.randint(1, 10)
+                random_y = random.randint(1, 20)
+                valueText = str(f'{random_x} + {random_y} =')
+                bot.edit_message_text(
+                    chat_id=call.message.chat.id, 
+                    message_id=call.message.message_id, 
+                    text=valueText, 
+                    reply_markup=plys(random_x, random_y))
+            
+            if call.data == 'Віднімання':
+                random_x = random.randint(1, 10)
+                random_y = random.randint(10, 20)
+                valueText = str(f'{random_y} - {random_x} =')
+                bot.edit_message_text(
+                    chat_id=call.message.chat.id, 
+                    message_id=call.message.message_id, 
+                    text=valueText, 
+                    reply_markup=minus(random_y, random_x))
+                
+            if call.data == 'Множення':
+                random_x = random.randint(1, 10)
+                random_y = random.randint(1, 11)
+                valueText = str(f'{random_x} x {random_y} =')
+                bot.edit_message_text(
+                    chat_id=call.message.chat.id, 
+                    message_id=call.message.message_id, 
+                    text=valueText, 
+                    reply_markup=multiplication(random_x, random_y))
+                
+            if call.data == 'Ділення':
+                random_x = random.randint(1, 10)
+                random_y = random.randint(1, 11)
+                divisionValue = random_x * random_y
+                valueText = str(f'{divisionValue} / {random_x} =')
+                bot.edit_message_text(
+                    chat_id=call.message.chat.id, 
+                    message_id=call.message.message_id,
+                    text=valueText, 
+                    reply_markup=division(divisionValue, random_x))
 
             # Для Кнопок гри В ЧУВУЧІ
 
